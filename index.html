@@ -329,6 +329,51 @@ const TRACKS = {
     width:8, grass:0xc2b280, sky:0xf7c78e, fog:0xf2d3a7, sun:0.85,
     pts:[[0,0],[60,0],[120,0],[165,8],[192,32],[202,66],[188,98],[158,110],[134,90],[138,62],[112,44],[76,56],[40,44],[4,58],[-32,46],[-64,60],[-96,52],[-114,26],[-104,-2],[-76,-12],[-40,-8]]
   },
+  etangs: {
+    name:"Circuit des Étangs", place:"Championnat national, manche 1 — brume matinale",
+    width:8, grass:0x39702f, sky:0xbac9c2, fog:0xc9d4cc, sun:0.7,
+    pts:[[0, 0], [50, 0], [95, -6], [135, 10], [150, 45], [130, 75], [95, 80], [70, 102], [35, 116], [-5, 105], [-35, 120], [-70, 110], [-90, 80], [-75, 50], [-95, 25], [-115, -5], [-90, -30], [-50, -25], [-20, -12]]
+  },
+  brassac: {
+    name:"Anneau de Brassac", place:"Manche 2 — zone industrielle",
+    width:8, grass:0x6b6f62, sky:0x9fb2c8, fog:0xb4c2d4, sun:0.8,
+    pts:[[5, -2], [60, -5], [115, 0], [150, 25], [155, 60], [130, 85], [95, 80], [65, 95], [30, 85], [0, 95], [-35, 88], [-65, 98], [-95, 85], [-115, 55], [-105, 20], [-115, -15], [-85, -35], [-45, -30], [-15, -15]]
+  },
+  puy: {
+    name:"Circuit du Puy", place:"Manche 3 — flanc de volcan",
+    width:8, grass:0x8a6f4d, sky:0xd8b98a, fog:0xdcc39a, sun:0.9,
+    pts:[[0, 0], [55, 5], [100, -5], [130, 20], [124, 49], [145, 75], [125, 105], [90, 110], [70, 85], [40, 95], [15, 120], [-20, 130], [-55, 115], [-68, 96], [-90, 90], [-115, 70], [-105, 40], [-125, 15], [-105, -15], [-60, -25], [-25, -15]]
+  },
+  portneuve: {
+    name:"Circuit de Port-Neuve", place:"Manche 4 — les docks",
+    width:8, grass:0x7c8894, sky:0x8fb7d4, fog:0xa8c6dd, sun:0.85,
+    pts:[[0, 0], [65, 0], [120, 5], [160, 30], [150, 65], [110, 70], [80, 95], [85, 130], [50, 150], [10, 140], [-25, 150], [-60, 135], [-70, 100], [-66, 78], [-80, 60], [-110, 40], [-100, 5], [-70, -20], [-30, -20]]
+  },
+  pins: {
+    name:"Circuit des Pins", place:"Manche 5 — forêt landaise",
+    width:8, grass:0x2e5d2e, sky:0xb8d8ea, fog:0xc4dccc, sun:0.75,
+    pts:[[0, 0], [55, -8], [110, -12], [155, 5], [175, 40], [155, 70], [115, 75], [85, 60], [55, 75], [25, 60], [-10, 75], [-45, 60], [-80, 75], [-110, 55], [-120, 20], [-100, -10], [-60, -22], [-25, -18]]
+  },
+  remparts: {
+    name:"GP des Remparts", place:"Manche 6 — cité médiévale, fin de journée",
+    width:8, grass:0x9c8f77, sky:0xf0b27a, fog:0xe9c193, sun:0.8,
+    pts:[[0, 0], [45, 3], [85, -5], [115, 15], [110, 45], [94, 64], [95, 90], [70, 110], [35, 100], [5, 115], [-30, 105], [-48, 86], [-75, 85], [-100, 60], [-96, 33], [-110, 10], [-95, -20], [-55, -28], [-20, -15]]
+  },
+  combe: {
+    name:"Circuit de la Combe", place:"Manche 7 — lacets alpins",
+    width:8, grass:0x4f7d46, sky:0xbfe0f5, fog:0xd4ecf7, sun:1.0,
+    pts:[[0, 0], [60, -5], [115, -10], [160, 10], [180, 45], [160, 80], [120, 90], [90, 115], [50, 130], [5, 120], [-40, 132], [-80, 115], [-95, 80], [-83, 56], [-95, 35], [-125, 15], [-115, -20], [-75, -32], [-30, -20]]
+  },
+  salines: {
+    name:"Circuit des Salines", place:"Manche 8 — plaine de sel",
+    width:8, grass:0xd9d4c7, sky:0xcfe8f2, fog:0xe6f2f6, sun:1.05,
+    pts:[[0, 0], [70, 0], [140, 0], [185, 20], [200, 55], [180, 90], [140, 100], [100, 85], [60, 100], [15, 90], [-30, 102], [-75, 90], [-105, 60], [-95, 25], [-115, 0], [-100, -28], [-55, -30], [-20, -15]]
+  },
+  verlaine: {
+    name:"Circuit de Verlaine", place:"Manche 9 — automne",
+    width:8, grass:0x7d5a34, sky:0xd9a05e, fog:0xd9b585, sun:0.8,
+    pts:[[0, 0], [50, -5], [95, 0], [125, 25], [115, 55], [85, 65], [75, 95], [45, 110], [10, 98], [-20, 115], [-55, 105], [-70, 84], [-95, 80], [-120, 55], [-108, 25], [-94, 5], [-98, -18], [-80, -38], [-40, -30]]
+  },
   sarron: {
     name:"Circuit National de Sarron", place:"Finale nationale — ciel couvert",
     width:8, grass:0x3e7d3a, sky:0x9aa7b5, fog:0xaab6c2, sun:0.65,
@@ -412,8 +457,256 @@ const CHAPTERS = [
   ]
 },
 {
+  track:"etangs", laps:5, objective:6, objLabel:"Objectif : top 6",
+  title:"Chapitre 3 — Le grand bain",
+  scene:"Paddock des Étangs, 7h du matin",
+  pre:[
+    {s:"narr", t:"Championnat national, manche 1. Le circuit des Étangs émerge de la brume. Les camions des grandes écuries écrasent la petite remorque de Gilles."},
+    {s:"gilles", t:"Douze pilotes, les meilleurs du pays. Ici, personne ne t'attendra. Top 6, et on repart la tête haute."},
+    {s:"lena", t:"Théo ! Content de te voir au national. Méfie-toi du secteur des marais : l'asphalte reste humide sous les arbres, même à midi."},
+    {s:"theo", t:"Et Chiara ?"},
+    {s:"lena", t:"Invaincue ici depuis trois ans. Ne pense pas à elle. Pense à tes six premières places."}
+  ],
+  events:{
+    start:{s:"gilles", t:"C'est le grand bain, fiston. Trouve ton rythme, la course est longue."},
+    lastLap:{s:"gilles", t:"Dernier tour ! Accroche ce top 6 !"},
+    overtake:{target:"lena", s:"lena", t:"Bien joué, petit ! Ton père aurait adoré ce dépassement."},
+    overtaken:{s:"gilles", t:"On t'a repris une place — reste lucide, vise le top 6."}
+  },
+  win:[
+    {s:"narr", t:"Top 6 arraché dans la brume. Dans le paddock, quelques mécanos des grandes écuries lèvent le pouce."},
+    {s:"gilles", t:"Dans les points pour ta première nationale ! Le nom Marchand est de retour au tableau."},
+    {s:"chiara", t:"Tiens, le régional a survécu. Profite des points, Marchand. La saison est longue et je ne rends jamais rien."}
+  ],
+  fail:[
+    {s:"gilles", t:"Hors de l'objectif… le national, c'est un autre monde. Mais tu as le rythme, il ne manque que la constance."},
+    {s:"lena", t:"Freine cinq mètres plus tôt dans les marais et tout s'enchaînera. Retentes-y."}
+  ]
+},
+{
+  track:"brassac", laps:5, objective:5, objLabel:"Objectif : top 5",
+  title:"Chapitre 4 — L'anneau de fonte",
+  scene:"Anneau de Brassac, entre deux usines",
+  pre:[
+    {s:"narr", t:"L'anneau de Brassac, coincé entre deux usines. Le vent rabat une odeur de métal chaud sur la piste."},
+    {s:"max", t:"Marchand. Maxence Volkov. J'ai étudié tes courses : tu attaques trop tôt en sortie de virage. Je sais exactement où je te reprendrai."},
+    {s:"theo", t:"Tu comptes me réciter mes défauts ou courir ?"},
+    {s:"max", t:"Les deux. C'est mathématique : un top 5 pour toi aujourd'hui, c'est improbable."},
+    {s:"gilles", t:"Ne l'écoute pas. Les calculateurs détestent une chose : l'imprévisible. Sois imprévisible."}
+  ],
+  events:{
+    start:{s:"max", t:"Rappel : statistiquement, tu finis 7e. Bonne course quand même."},
+    lastLap:{s:"gilles", t:"Dernier tour ! Fais mentir ses statistiques !"},
+    overtake:{target:"max", s:"max", t:"Recalcul en cours… ce dépassement n'était pas dans mes données !"},
+    overtaken:{s:"max", t:"Et voilà. Les chiffres finissent toujours par avoir raison."}
+  },
+  win:[
+    {s:"gilles", t:"Top 5 ! Et devant Volkov ! Ses tableurs vont chauffer toute la nuit."},
+    {s:"max", t:"…Impressionnant. J'ajoute une variable « Marchand » à mes modèles. Ne t'y habitue pas."},
+    {s:"theo", t:"(Il note vraiment tout dans un carnet. Ce type est effrayant.)"}
+  ],
+  fail:[
+    {s:"max", t:"Comme prévu. Mes modèles ne se trompent jamais — enfin, rarement."},
+    {s:"gilles", t:"Il t'a eu au mental, pas au chrono. On y retourne, et cette fois tu cours TA course."}
+  ]
+},
+{
+  track:"puy", laps:5, objective:4, objLabel:"Objectif : top 4",
+  title:"Chapitre 5 — Le moteur du père",
+  scene:"Circuit du Puy, à flanc de volcan",
+  pre:[
+    {s:"narr", t:"Le circuit du Puy grimpe à flanc de volcan. Dans le paddock, Gilles a le nez dans le moteur depuis l'aube, la mine grave."},
+    {s:"gilles", t:"Le moteur de ton père accuse le coup. Douze ans d'attente, ça use même les meilleures mécaniques. Il tiendra… si tu le ménages."},
+    {s:"theo", t:"Le ménager ? Papy, il me faut un top 4 pour rester dans le championnat."},
+    {s:"gilles", t:"Alors pilote fin. Pas de sur-régime dans la montée, laisse-le respirer dans la descente. La vitesse, c'est de la douceur."}
+  ],
+  events:{
+    start:{s:"gilles", t:"Température moteur correcte. Souple sur l'accélérateur dans la montée, promis ?"},
+    lastLap:{s:"gilles", t:"Dernier tour, la température monte ! Finis en douceur, il tiendra !"},
+    overtake:{target:"lena", s:"lena", t:"Joli ! Tout en finesse — on dirait ton père dans ses grands jours."},
+    overtaken:{s:"gilles", t:"Une place de perdue — ne compense pas en tirant sur le moteur !"}
+  },
+  win:[
+    {s:"narr", t:"Le kart rouge et blanc franchit la ligne — et le moteur pousse un soupir de vapeur, comme un vieux coureur après l'effort."},
+    {s:"gilles", t:"Top 4, et le moteur est entier ! Ce soir je lui refais un joint de culasse, il l'a bien mérité."},
+    {s:"theo", t:"Il nous emmènera jusqu'à Sarron, papy ?"},
+    {s:"gilles", t:"Jusqu'à Sarron, et jusqu'au bout. Parole de mécano."}
+  ],
+  fail:[
+    {s:"gilles", t:"On a fini, c'est déjà ça. Mais le classement ne suffit pas. On règle le moteur et on y retourne."},
+    {s:"theo", t:"Cette montée ne m'aura pas deux fois."}
+  ]
+},
+{
+  track:"portneuve", laps:5, objective:3, objLabel:"Objectif : top 3",
+  title:"Chapitre 6 — Les dockers",
+  scene:"Port-Neuve, entre les grues et les conteneurs",
+  pre:[
+    {s:"narr", t:"Port-Neuve. Le circuit serpente entre les grues et les conteneurs. Karim regarde la mer, les épaules basses."},
+    {s:"karim", t:"Mon sponsor me lâche, Théo. Fin du mois, plus de budget. Peut-être mes trois dernières courses."},
+    {s:"theo", t:"Attends — les dockers, là. Ils te regardent courir depuis le début de saison, non ?"},
+    {s:"karim", t:"Ouais, ils viennent à chaque manche. Pourquoi ?"},
+    {s:"gilles", t:"Parce qu'un sponsor, ce n'est pas toujours une banque, petit. Parfois c'est un port entier. Faites une belle course, tous les deux — et rappelez-leur pourquoi ils aiment le kart."}
+  ],
+  events:{
+    start:{s:"karim", t:"Fais-moi une faveur : si tu me doubles, fais-le avec style. Les dockers adorent le style."},
+    lastLap:{s:"gilles", t:"Dernier tour ! Tout le port est debout sur les conteneurs !"},
+    overtake:{target:"karim", s:"karim", t:"STYLÉ ! Ok, ils ont sifflé ! Là, je te suis, on leur fait le grand spectacle !"},
+    overtaken:{s:"gilles", t:"Position perdue — reprends-la proprement, on te regarde !"}
+  },
+  win:[
+    {s:"narr", t:"Sur le podium, une bannière se déploie sur un portique : « LES DOCKERS DE PORT-NEUVE AVEC KARIM ZIDI ». Karim en reste muet."},
+    {s:"karim", t:"Ils… ils ont cotisé. Tout le port. J'ai un sponsor, Théo. J'AI UN SPONSOR !"},
+    {s:"theo", t:"Alors on se retrouve en piste jusqu'à la fin de la saison. Et à Sarron, tu me devras une aspiration."},
+    {s:"karim", t:"À Sarron, frère, je te pousse jusqu'à la ligne s'il le faut !"}
+  ],
+  fail:[
+    {s:"karim", t:"Pas de podium, pas de miracle… pour aucun de nous deux."},
+    {s:"gilles", t:"Les dockers reviendront dimanche. Offre-leur la course qu'ils méritent."}
+  ]
+},
+{
+  track:"pins", laps:5, objective:3, objLabel:"Objectif : top 3",
+  title:"Chapitre 7 — La prodige",
+  scene:"Circuit des Pins, au cœur de la forêt",
+  pre:[
+    {s:"narr", t:"La forêt des Pins avale le circuit. Une gamine de quatorze ans signe des autographes près d'un kart rose : Iris Laurent, la révélation de la saison."},
+    {s:"iris", t:"Théo Marchand ! J'ai un poster de ton père dans mon garage. C'est pour ça que je vais te battre aujourd'hui — il faut bien dépasser ses idoles."},
+    {s:"theo", t:"Quatorze ans et déjà plus rapide en tchatche qu'en piste ?"},
+    {s:"iris", t:"Oh, en piste aussi. Regarde bien mes trajectoires dans les esses — tu vas apprendre des trucs."},
+    {s:"gilles", t:"Cette petite est sérieuse, Théo. Ses chronos du matin sont dans le top 3. Ne la sous-estime pas."}
+  ],
+  events:{
+    start:{s:"iris", t:"Premier arrivé à la fourche des pins a gagné ! Enfin… symboliquement. Enfin… pas que."},
+    lastLap:{s:"gilles", t:"Dernier tour ! La petite est dans tes échappements, ne te retourne pas !"},
+    overtake:{target:"iris", s:"iris", t:"Hé ! J'avais pas fini de te montrer mes trajectoires !"},
+    overtaken:{s:"iris", t:"Leçon numéro un : ne jamais quitter des yeux une future championne !"}
+  },
+  win:[
+    {s:"iris", t:"Bon. D'accord. T'es aussi rapide que sur les vidéos. Mais l'année prochaine, je te prends le titre, c'est noté dans mon agenda."},
+    {s:"theo", t:"Je signerai ton poster en attendant."},
+    {s:"iris", t:"…Vrai ? VRAI ?! Attends, je vais le chercher !"},
+    {s:"gilles", t:"Tu viens de te faire une alliée pour la vie, fiston."}
+  ],
+  fail:[
+    {s:"iris", t:"Battu par une pilote de quatorze ans ! T'inquiète, ça arrive à plein de gens. Enfin… à toi, surtout."},
+    {s:"gilles", t:"Elle est rapide, mais tu l'es plus sur un tour complet. Reste devant dès le départ cette fois."}
+  ]
+},
+{
+  track:"remparts", laps:5, objective:2, objLabel:"Objectif : top 2",
+  title:"Chapitre 8 — Sous les murailles",
+  scene:"GP des Remparts, mi-saison",
+  pre:[
+    {s:"narr", t:"Le tracé des Remparts se faufile sous les murailles médiévales. Mi-saison : au championnat, Chiara mène, Théo remonte. Elle l'attend à l'entrée du paddock."},
+    {s:"chiara", t:"Marchand. On dit que tu vises mon titre. Les journalistes, les mécanos… même mon ingénieur parle de toi."},
+    {s:"theo", t:"Et ça t'empêche de dormir ?"},
+    {s:"chiara", t:"Rien ne m'empêche de dormir. Mais aujourd'hui, sous ces murailles, je vais te montrer la différence entre un espoir et une championne."},
+    {s:"gilles", t:"Top 2 minimum pour rester dans la course au titre, Théo. C'est aujourd'hui que la saison bascule."}
+  ],
+  events:{
+    start:{s:"chiara", t:"Petit conseil : les murailles ne pardonnent pas. Moi non plus."},
+    lastLap:{s:"gilles", t:"Dernier tour ! Tu es dans le match pour le titre, tiens bon !"},
+    overtake:{target:"chiara", s:"chiara", t:"QUOI ?! Non non non — pas TOI, pas ICI !"},
+    overtaken:{s:"chiara", t:"Voilà la différence, Marchand. Médite là-dessus."}
+  },
+  win:[
+    {s:"narr", t:"Pour la première fois de la saison, Chiara Rossi quitte un circuit sans sourire pour les photographes."},
+    {s:"gilles", t:"Top 2 sous les remparts ! L'écart au championnat fond, fiston !"},
+    {s:"chiara", t:"…Profite. Il reste quatre courses. Les championnes gagnent quand ça compte. Et Sarron compte."},
+    {s:"theo", t:"(Elle a dit Sarron. Elle y pense autant que moi.)"}
+  ],
+  fail:[
+    {s:"chiara", t:"Un espoir. Une championne. Tu vois la différence, maintenant ?"},
+    {s:"gilles", t:"Elle joue avec tes nerfs et ça marche. Recentre-toi : la piste, rien que la piste."}
+  ]
+},
+{
+  track:"combe", laps:5, objective:2, objLabel:"Objectif : top 2",
+  title:"Chapitre 9 — La dette de Léna",
+  scene:"La Combe, lacets alpins",
+  pre:[
+    {s:"narr", t:"La Combe, ses lacets alpins, son air glacé. Gilles compte et recompte : le budget pneus est à sec, et les gommes du kart sont mortes."},
+    {s:"gilles", t:"Avec ces pneus-là, tu ne tiendras pas trois tours à ce niveau. Je suis désolé, petit. J'aurais dû mieux gérer."},
+    {s:"lena", t:"Personne ne baisse les bras ici. Théo — mon stand, maintenant. J'ai un train de pneus neufs pour toi."},
+    {s:"theo", t:"Léna, je ne peux pas accepter, c'est ton matériel de course…"},
+    {s:"lena", t:"Ton père m'a offert mon premier châssis quand ma famille n'avait rien. Je rembourse ma dette au fils. Débat clos. Top 2 et on est quittes."}
+  ],
+  events:{
+    start:{s:"lena", t:"Ces gommes montent en température en un demi-tour. Ensuite, régale-toi."},
+    lastLap:{s:"gilles", t:"Dernier tour ! Fais honneur aux pneus de Léna !"},
+    overtake:{target:"chiara", s:"chiara", t:"Encore toi ! Mais d'où sors-tu ces pneus ?!"},
+    overtaken:{s:"gilles", t:"On t'a passé — patience, tes gommes vivront plus longtemps que les leurs."}
+  },
+  win:[
+    {s:"theo", t:"Léna — top 2. Tes pneus étaient magiques. On est quittes ?"},
+    {s:"lena", t:"Quittes. Maintenant on est juste amis. Et dimanche prochain, amis ou pas, je te bats."},
+    {s:"gilles", t:"Ton père serait fier — pas du résultat. De la famille qu'on est en train de devenir."}
+  ],
+  fail:[
+    {s:"lena", t:"Même les meilleurs pneus ne freinent pas à ta place, Théo. Plus tôt dans les lacets !"},
+    {s:"gilles", t:"On remet ça. La Combe se mérite."}
+  ]
+},
+{
+  track:"salines", laps:5, objective:2, objLabel:"Objectif : top 2",
+  title:"Chapitre 10 — L'alliance",
+  scene:"Les Salines, blanches à perte de vue",
+  pre:[
+    {s:"narr", t:"Les Salines, blanches à perte de vue. Au championnat, plus que deux points d'écart. Dans le paddock, Volkov quitte le motorhome de Rossi, son carnet sous le bras."},
+    {s:"karim", t:"Tu as vu ça ? Volkov roule pour Rossi maintenant. Il va te bloquer pendant qu'elle s'échappe. C'est ça, son plan."},
+    {s:"max", t:"C'est exact. C'est mathématiquement la meilleure stratégie pour le titre de Chiara. Rien de personnel, Marchand."},
+    {s:"theo", t:"Tu m'as ajouté à tes modèles, Maxence. Tu sais que le blocage ne marchera pas."},
+    {s:"max", t:"…C'est le seul scénario où mes modèles divergent. Fascinant. Bonne course."},
+    {s:"gilles", t:"Deux contre un, alors. Karim veillera sur tes arrières. Top 2, et le titre se jouera à la régulière."}
+  ],
+  events:{
+    start:{s:"max", t:"Application du protocole défense. Désolé, c'est mathématique."},
+    lastLap:{s:"gilles", t:"Dernier tour ! Passe l'échiquier de Volkov et va chercher ta place !"},
+    overtake:{target:"max", s:"max", t:"Protocole… contourné ?! Elle va être furieuse."},
+    overtaken:{s:"gilles", t:"Ils te bloquent à deux — reste calme, cherche l'aspiration !"}
+  },
+  win:[
+    {s:"narr", t:"Volkov range son carnet, y écrit une dernière ligne, puis l'arrache proprement."},
+    {s:"max", t:"Mes modèles disent désormais que le titre se jouera à Sarron, entre Rossi et toi. À 50-50. Je déteste le 50-50."},
+    {s:"chiara", t:"Volkov ! On avait un PLAN !"},
+    {s:"max", t:"Le plan a rencontré une variable Marchand. J'avais prévenu."}
+  ],
+  fail:[
+    {s:"karim", t:"Ils t'ont muré, ces vautours ! La prochaine fois on part devant et le plan tombe à l'eau."},
+    {s:"gilles", t:"À la régulière, tu les bats. Repartons en chasse."}
+  ]
+},
+{
+  track:"verlaine", laps:5, objective:1, objLabel:"Objectif : la victoire",
+  title:"Chapitre 11 — Feuilles mortes",
+  scene:"Verlaine, avant-dernière manche",
+  pre:[
+    {s:"narr", t:"Verlaine en automne. Les feuilles rousses tourbillonnent sur la piste. Avant-dernière manche : seule une victoire garde Théo dans la course au titre."},
+    {s:"gilles", t:"Les comptes sont simples, fiston : tu gagnes ici, et Sarron sera une finale. Sinon, Chiara est titrée dimanche soir."},
+    {s:"theo", t:"Gagner. Devant elle. Alors qu'elle n'a pas perdu une course d'automne depuis trois ans."},
+    {s:"lena", t:"Les feuilles cachent les points de corde, tout le monde freinera trop tôt. Toi, repère les branches des arbres — elles, elles ne bougent pas."},
+    {s:"karim", t:"Et si tu doutes, écoute le moteur de ton père. Ce vieux grognement, c'est le GPS du paradis."}
+  ],
+  events:{
+    start:{s:"gilles", t:"Piste glissante sous les feuilles ! Premier tour d'observation, ensuite tu attaques."},
+    lastLap:{s:"gilles", t:"DERNIER TOUR ! La victoire ou rien — tout le paddock retient son souffle !"},
+    overtake:{target:"chiara", s:"chiara", t:"Pas ma course d'automne ! Pas CELLE-LÀ !"},
+    overtaken:{s:"chiara", t:"L'automne est à moi, Marchand. Comme le titre."}
+  },
+  win:[
+    {s:"narr", t:"Première victoire nationale. Sur le podium, Théo lève le trophée sous une pluie de feuilles rousses. Plus bas, Chiara applaudit — trois secondes exactement — puis tourne les talons."},
+    {s:"gilles", t:"VICTOIRE ! À Sarron, vous arriverez à égalité ! Une finale, une vraie, comme il y a douze ans !"},
+    {s:"theo", t:"Comme il y a douze ans… mais cette fois, c'est nous qui écrirons la fin."}
+  ],
+  fail:[
+    {s:"gilles", t:"Sans victoire ici, Sarron ne serait qu'une course de plus… Impossible. On la gagne, cette course."},
+    {s:"theo", t:"Encore une fois. Pour la finale. Pour papa."}
+  ]
+},
+{
   track:"sarron", laps:5, objective:1, objLabel:"Objectif : la victoire",
-  title:"Chapitre 3 — Sarron, douze ans après",
+  title:"Chapitre 12 — Sarron, douze ans après",
   scene:"Circuit national de Sarron, veille de la finale",
   ai:[ {id:"chiara",skill:0.985}, {id:"karim",skill:0.95}, {id:"lena",skill:0.92}, {id:"max",skill:0.89},
        {id:"basile",skill:0.86}, {id:"iris",skill:0.84}, {id:"diego",skill:0.82}, {id:"nino",skill:0.80},
@@ -451,6 +744,18 @@ const CHAPTERS = [
   ]
 }
 ];
+/* niveau des adversaires : progresse au fil des 12 manches */
+const ROSTER=[
+  {id:"chiara",lo:0.94,hi:0.985},{id:"karim",lo:0.87,hi:0.95},{id:"lena",lo:0.85,hi:0.92},
+  {id:"max",lo:0.82,hi:0.89},{id:"basile",lo:0.79,hi:0.86},{id:"iris",lo:0.74,hi:0.87},
+  {id:"diego",lo:0.75,hi:0.82},{id:"nino",lo:0.73,hi:0.80},{id:"yumi",lo:0.71,hi:0.78},
+  {id:"hugo",lo:0.69,hi:0.76},{id:"sacha",lo:0.67,hi:0.74}
+];
+CHAPTERS.forEach((ch,i)=>{
+  const t=i/(CHAPTERS.length-1);
+  ch.ai=ROSTER.map(r=>({id:r.id, skill:+(r.lo+(r.hi-r.lo)*t).toFixed(3)}));
+});
+
 /* ---------------- MOTEUR 3D ---------------- */
 let renderer, scene, camera;
 const SAMPLES = 420;                 // échantillons de la piste
