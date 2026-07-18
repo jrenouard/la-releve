@@ -810,11 +810,13 @@ function initRenderer(){
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   document.getElementById("game").appendChild(renderer.domElement);
   camera = new THREE.PerspectiveCamera(68, window.innerWidth/window.innerHeight, 0.1, 900);
-  window.addEventListener("resize", ()=>{
+  const fit=()=>{
     camera.aspect = window.innerWidth/window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+  };
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", ()=>{ setTimeout(fit,300); setTimeout(fit,900); });
 }
 
 /* --- construit la piste + décor, renvoie {samples, totalLen, ...} --- */
@@ -1025,6 +1027,9 @@ function buildTrack(def){
   function buildTribune(si){
     si=si%SAMPLES;
     const s0=samples[si];
+    // uniquement le long des lignes droites
+    const tA=samples[(si-8+SAMPLES)%SAMPLES].t, tB=samples[(si+8)%SAMPLES].t;
+    if (Math.acos(Math.max(-1,Math.min(1,tA.dot(tB)))) > 0.30) return;
     const base=new THREE.Vector3(s0.p.x+s0.n.x*(w+15), 0, s0.p.z+s0.n.z*(w+15));
     // ne pas construire si une AUTRE portion du circuit passe à proximité
     for (let i=0;i<SAMPLES;i+=3){
@@ -1056,7 +1061,7 @@ function buildTrack(def){
     g.rotation.y=Math.atan2(s0.n.x, s0.n.z);   // face à la piste
     scene.add(g);
   }
-  [8, 110, 220, 330].forEach(buildTribune);
+  [8, 55, 100, 145, 190, 235, 280, 325, 370].forEach(buildTribune);   // tout autour du circuit
 
   // voie des stands : asphalte, box, bâtiment et muret
   (function pitLane(){
