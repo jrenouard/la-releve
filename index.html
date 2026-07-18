@@ -168,8 +168,10 @@
   body.touch #menu h1 { font-size:38px; }
   body.touch .menu-stripe { margin:14px 0; }
   body.touch .btn { padding:12px 34px; font-size:16px; }
-  /* messages radio : petit bandeau en haut sur mobile (ne cache pas la route) */
-  body.touch #toast { bottom:auto; top:50px; max-width:min(420px,64vw);
+  /* mobile : minimap en haut à gauche, messages radio en bas à gauche */
+  body.touch #minimap { bottom:auto; top:104px; left:14px; width:100px; height:100px; }
+  body.touch #toast { top:auto; bottom:116px; left:14px; right:auto; transform:none;
+    text-align:left; max-width:min(380px,52vw);
     padding:5px 12px; font-size:12px; border-radius:8px; border-left-width:4px; }
   body.touch #toast b { font-size:10px; margin-bottom:1px; letter-spacing:1px; }
 </style>
