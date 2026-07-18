@@ -226,7 +226,7 @@
   </div>
   <div id="hud-obj"></div>
   <div id="standings"></div>
-  <div id="hud-speed"><span>0</span> <small>km/h</small><div id="hud-tires"></div></div>
+  <div id="hud-speed"><span>0</span> <small>km/h</small></div>
   <button id="btn-pause" title="Pause">&#10073;&#10073;</button>
   <canvas id="minimap" width="170" height="170"></canvas>
   <div id="toast"><b></b><span></span></div>
@@ -1341,18 +1341,6 @@ function updatePlayer(k,dt){
     if (k.spin<=0){ k.slip=0; $("spinbox").classList.add("hidden"); }
     return;
   }
-  // arrêt au stand en cours : kart immobilisé, changement de pneus
-  if (k.pitTimer>0){
-    k.pitTimer-=dt;
-    k.speed=0;
-    if (k.pitTimer<=0){
-      k.tireWear=0;
-      showToast("gilles","Pneus neufs ! Allez, va les chercher !");
-      beep(980,.25,.12);
-    }
-    moveKart(k,dt);
-    return;
-  }
   const cap = onRoad(k)? MAXSP : OFFCAP;
   // entrées combinées clavier + volant/manette (analogique)
   let thr=inThrottle()?1:0, brk=inBrake()?1:0;
@@ -1377,15 +1365,14 @@ function updatePlayer(k,dt){
   k.speed-=k.speed*DRAG*dt*(onRoad(k)?1:2.6);
   k.speed=Math.max(-9,Math.min(cap,k.speed));
   const grip=hand? 1.55:1.0;
-  const wear=Math.min(1,k.tireWear);
-  const rate=2.5*grip*Math.max(-1,Math.min(1,k.speed/10))*(1-0.25*(Math.abs(k.speed)/MAXSP))*(1-0.10*wear);
+  const rate=2.5*grip*Math.max(-1,Math.min(1,k.speed/10))*(1-0.25*(Math.abs(k.speed)/MAXSP));
   k.heading+=steer*rate*dt;
   // braquer fort à haute vitesse fait perdre de la vitesse (les trajectoires comptent)
   if (k.speed>16) k.speed-=Math.abs(steer)*k.speed*0.10*dt*(hand?1.2:1);
   k.steerVis+=(steer-k.steerVis)*Math.min(1,dt*10);
   // au-delà de la limite d'adhérence -> tête-à-queue
   const aLat=Math.abs(steer)*rate*k.speed;
-  const limit=(hand? 64:46)*(1-0.22*wear);   // pneus usés = décrochage plus tôt
+  const limit=hand? 64:46;
   if (aLat>limit) k.slip+=dt*(aLat/limit-1)*4;
   else k.slip=Math.max(0,k.slip-dt*2);
   if (k.slip>0.15){            // crissement d'avertissement avant le décrochage
@@ -1396,17 +1383,6 @@ function updatePlayer(k,dt){
     k.spin=1.15; k.spinDir=steer>=0?1:-1;
     $("spinbox").classList.remove("hidden");
     beep(180,.5,.16);
-  }
-  // usure des pneus + arrêt au stand
-  k.tireWear=Math.min(1.2, k.tireWear + Math.abs(k.speed)*dt/3400);
-  if (k.tireWear>0.7 && !k.wearWarned && raceMode==="race"){
-    k.wearWarned=true;
-    showToast("gilles","Tes pneus s'usent — un arrêt au stand peut payer !");
-  }
-  if (raceOn && inPitZone(k) && Math.abs(k.speed)<1.5 && k.tireWear>0.12 && k.pitTimer<=0){
-    k.pitTimer=3;
-    showToast("gilles","Arrêt au stand — changement de pneus !");
-    beep(600,.15,.1);
   }
   moveKart(k,dt);
 }
@@ -1444,9 +1420,6 @@ function updateAI(k,dt){
   // rubber-band léger : garde la course disputée, sans dépasser la vitesse max
   if (gap> 65) target*=0.95;
   if (gap<-70) target*=1.04;
-  // l'IA use aussi ses pneus (sans s'arrêter aux stands)
-  k.tireWear=Math.min(1.2, k.tireWear + k.speed*dt/3400);
-  target*=1-0.05*Math.min(1,k.tireWear);
   target=Math.min(target,MAXSP);
   if (!onRoad(k)) target=Math.min(target,OFFCAP);
   if (raceOn){
@@ -1461,12 +1434,6 @@ function onRoad(k){
   const s=track.samples[k.si];
   const lat=(k.pos.x-s.p.x)*s.n.x+(k.pos.z-s.p.z)*s.n.z;
   return Math.abs(lat)<=track.w+1.55;   // les vibreurs font partie de la piste
-}
-function inPitZone(k){
-  if (k.si<track.pitA || k.si>track.pitB) return false;
-  const s=track.samples[k.si];
-  const lat=(k.pos.x-s.p.x)*s.n.x+(k.pos.z-s.p.z)*s.n.z;
-  return lat < -(track.w+1.2);
 }
 
 function moveKart(k,dt){
@@ -1721,10 +1688,6 @@ function fmtTime(t){
 function updateHUD(dt){
   hudAcc+=dt;
   $("hud-speed").querySelector("span").textContent=Math.round(Math.abs(player.speed)*3.6);
-  const wp=Math.max(0,Math.round((1-Math.min(1,player.tireWear))*100));
-  const tEl=$("hud-tires");
-  tEl.textContent="PNEUS "+wp+"%";
-  tEl.style.color= wp>50? "#7ee787" : wp>25? "#ffb347" : "#ff8a80";
   if (hudAcc<0.2) return;
   hudAcc=0;
   const laps= raceMode==="quali"? 1 : LAPS_KEY();
@@ -1917,7 +1880,7 @@ function loadSeason(){ try{ return JSON.parse(localStorage.getItem("lr-save")||"
 function clearSeason(){ try{ localStorage.removeItem("lr-save"); }catch(e){} }
 function refreshMenu(){
   const s=loadSeason(), b=$("btn-continue");
-  if (s && s.c>0 && s.c<CHAPTERS.length){
+  if (s && s.c>=0 && s.c<CHAPTERS.length){
     b.textContent="Continuer la saison — Chapitre "+(s.c+1);
     b.classList.remove("hidden");
   } else b.classList.add("hidden");
