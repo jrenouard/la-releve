@@ -337,7 +337,7 @@ window.addEventListener("error", function(e){
    ============================================================ */
 
 /* PWA : service worker + mise à jour automatique */
-const GAME_VERSION="v12";
+const GAME_VERSION="v13";
 if (typeof navigator!=="undefined" && "serviceWorker" in navigator &&
     typeof location!=="undefined" && location.protocol.indexOf("http")===0){
   navigator.serviceWorker.register("./sw.js")
@@ -867,6 +867,7 @@ function buildTrack(def){
 
   const w = def.width;
   const pitA=SAMPLES-70, pitB=SAMPLES-6;   // zone de la voie des stands (côté droit avant la ligne)
+  const parcA=10, parcB=70;                // parc fermé (côté gauche après la ligne)
 
   // sol
   const ground = new THREE.Mesh(
@@ -996,6 +997,7 @@ function buildTrack(def){
     const s=samples[i];
     for (const side of [-1,1]){
       if (side===-1 && i>=pitA-4 && i<=pitB+3) continue;   // ouverture de la voie des stands
+      if (side===1 && i>=parcA-3 && i<=parcB+3) continue;  // ouverture du parc fermé
       const m=new THREE.Mesh(plotG, barrierM[(i/7|0)%2]);
       m.position.set(s.p.x+s.n.x*side*(w+2.6), .55, s.p.z+s.n.z*side*(w+2.6));
       m.castShadow=true;
@@ -1127,7 +1129,55 @@ function buildTrack(def){
     }
   })();
 
-  return { def, samples, totalLen, w, pitA, pitB };
+  // parc fermé : esplanade et emplacements où ranger les karts après la course
+  (function parcFerme(){
+    const pos=[], idx=[]; let vi=0;
+    for (let i=parcA;i<parcB;i++){
+      const a=samples[i], b=samples[i+1];
+      const inn=w+0.5, out=w+7.2;
+      pos.push(a.p.x+a.n.x*inn, .004, a.p.z+a.n.z*inn,
+               a.p.x+a.n.x*out, .004, a.p.z+a.n.z*out,
+               b.p.x+b.n.x*inn, .004, b.p.z+b.n.z*inn,
+               b.p.x+b.n.x*out, .004, b.p.z+b.n.z*out);
+      idx.push(vi,vi+2,vi+1, vi+1,vi+2,vi+3);
+      vi+=4;
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(pos,3));
+    g.setIndex(idx); g.computeVertexNormals();
+    if (g.attributes.normal.getY(0)<0){
+      for (let i2=0;i2<idx.length;i2+=3){ const t2=idx[i2+1]; idx[i2+1]=idx[i2+2]; idx[i2+2]=t2; }
+      g.setIndex(idx); g.computeVertexNormals();
+    }
+    const apron=new THREE.Mesh(g, new THREE.MeshLambertMaterial({color:0x565b62}));
+    apron.receiveShadow=true;
+    scene.add(apron);
+    // 12 emplacements blancs
+    for (let sl=0; sl<12; sl++){
+      const s0=samples[16+sl*4];
+      const q=new THREE.Mesh(new THREE.PlaneGeometry(3.4,2.6),
+        new THREE.MeshBasicMaterial({color:0xcfd8dc}));
+      q.rotation.x=-Math.PI/2;
+      q.position.set(s0.p.x+s0.n.x*(w+4.5), .03, s0.p.z+s0.n.z*(w+4.5));
+      q.rotation.z=Math.atan2(s0.t.x,s0.t.z);
+      scene.add(q);
+    }
+    // panneau "PARC FERMÉ" (portique rouge)
+    const mid=samples[Math.floor((parcA+parcB)/2)];
+    const pan=new THREE.Mesh(new THREE.BoxGeometry(10,1.2,.4),
+      new THREE.MeshLambertMaterial({color:0xc62828}));
+    pan.position.set(mid.p.x+mid.n.x*(w+7.8), 2.6, mid.p.z+mid.n.z*(w+7.8));
+    pan.rotation.y=Math.atan2(mid.t.x,mid.t.z);
+    scene.add(pan);
+    for (const off of [-4.6,4.6]){
+      const pole=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,2.6,6),
+        new THREE.MeshLambertMaterial({color:0x333a44}));
+      pole.position.set(mid.p.x+mid.n.x*(w+7.8)+mid.t.x*off, 1.3, mid.p.z+mid.n.z*(w+7.8)+mid.t.z*off);
+      scene.add(pole);
+    }
+  })();
+
+  return { def, samples, totalLen, w, pitA, pitB, parcA, parcB };
 }
 
 /* --- kart 3D --- */
@@ -1337,7 +1387,7 @@ function spawnKarts(gridDefs, quali){
       speed:0, si, lap:0, skill:gdef.skill||1,
       isPlayer:gdef.isPlayer, latOff:(Math.random()*2-1)*(track.w*0.45),
       finished:false, finishOrder:0, steerVis:0, spin:0, spinDir:1, slip:0, pushX:0, pushZ:0,
-      tireWear:0, pitTimer:0, wearWarned:false
+      parked:false, slotSi:30
     };
     if (k.isPlayer) player=k;
     karts.push(k);
@@ -1400,6 +1450,37 @@ function updatePlayer(k,dt){
     $("spinbox").classList.remove("hidden");
     beep(180,.5,.16);
   }
+  moveKart(k,dt);
+}
+
+/* retour au parc fermé : tous les karts rentrent se garer après l'arrivée */
+let parcMode=false;
+function updateParc(k,dt){
+  if (k.parked){ k.speed=0; k.steerVis=0; moveKart(k,dt); return; }
+  const N=SAMPLES;
+  const slotS=track.samples[k.slotSi];
+  const slotX=slotS.p.x + slotS.n.x*(track.w+4.5);
+  const slotZ=slotS.p.z + slotS.n.z*(track.w+4.5);
+  const distSlot=Math.hypot(slotX-k.pos.x, slotZ-k.pos.z);
+  let tx,tz,spd;
+  if (k.si>=8 && k.si<=track.parcB+4){
+    tx=slotX; tz=slotZ;
+    spd= distSlot<12? 5 : 10;
+    if (distSlot<2.4){ k.parked=true; k.speed=0; moveKart(k,dt); return; }
+  } else {
+    // rejoindre la ligne puis l'entrée du parc
+    const look=(k.si+Math.round(6+k.speed*0.35))%N;
+    const tp=track.samples[look];
+    tx=tp.p.x; tz=tp.p.z; spd=18;
+  }
+  const desired=Math.atan2(tx-k.pos.x, tz-k.pos.z);
+  let dh=desired-k.heading;
+  while (dh>Math.PI) dh-=2*Math.PI;
+  while (dh<-Math.PI) dh+=2*Math.PI;
+  k.heading+=Math.max(-3*dt, Math.min(3*dt, dh));
+  k.steerVis+=(Math.sign(dh)-k.steerVis)*Math.min(1,dt*6);
+  if (k.speed<spd) k.speed+=10*dt; else k.speed-=16*dt;
+  k.speed=Math.max(0,k.speed);
   moveKart(k,dt);
 }
 
@@ -1471,7 +1552,8 @@ function moveKart(k,dt){
   const s=track.samples[k.si];
   const lat=(k.pos.x-s.p.x)*s.n.x+(k.pos.z-s.p.z)*s.n.z;
   const inPitRange = k.si>=track.pitA && k.si<=track.pitB;
-  const limPos=track.w+2.1;
+  const inParcRange = k.si>=track.parcA && k.si<=track.parcB;
+  const limPos= inParcRange? track.w+7.6 : track.w+2.1;
   const limNeg= inPitRange? track.w+7.6 : track.w+2.1;
   if (lat>limPos || lat<-limNeg){
     const cl= lat>0? limPos : -limNeg;
@@ -1720,7 +1802,7 @@ function updateHUD(dt){
   // sens inverse ?
   const s=track.samples[player.si];
   const dot=Math.sin(player.heading)*s.t.x+Math.cos(player.heading)*s.t.z;
-  wrongT=(dot<-0.3 && player.speed>4)? wrongT+0.2 : 0;
+  wrongT=(dot<-0.3 && player.speed>4 && raceOn)? wrongT+0.2 : 0;
   $("wrongway").classList.toggle("hidden", wrongT<1);
 }
 
@@ -1729,7 +1811,7 @@ function initSession(objText){
   const ch=CHAPTERS[chapterIdx];
   prepMinimap();
   firedEvents={}; wasBehindTarget=true; lastRank=karts.length; overtakenCd=0;
-  finishCount=0; raceTime=0; raceOn=false; wrongT=0;
+  finishCount=0; raceTime=0; raceOn=false; wrongT=0; parcMode=false;
   camPos.copy(player.pos).add(new THREE.Vector3(0,4,-10));
   camLook.copy(player.pos);
   $("hud").classList.remove("hidden");
@@ -1752,7 +1834,8 @@ function aiQualiTime(skill){
 }
 function endQuali(){
   raceOn=false;
-  updateEngine(0,false);
+  player.slotSi=36; player.parked=false;
+  parcMode=true;
   const ch=CHAPTERS[chapterIdx];
   const entries=[{id:"theo", skill:1, isPlayer:true, t:raceTime}];
   ch.ai.forEach(a=>entries.push({id:a.id, skill:a.skill, isPlayer:false, t:aiQualiTime(a.skill)}));
@@ -1777,7 +1860,7 @@ function endQuali(){
     $("btn-res").textContent="En piste !";
     $("btn-res").onclick=()=>{ $("results").classList.add("hidden"); fadeTo(startRace); };
     $("results").classList.remove("hidden");
-  },1000);
+  },4500);
 }
 
 function startRace(){
@@ -1807,11 +1890,13 @@ function fireEventLater(name,ms){ setTimeout(()=>{ if(state==="race") fireEvent(
 
 function endRace(){
   raceOn=false;
-  updateEngine(0,false);
   const ch=CHAPTERS[chapterIdx];
   const st=standings();
   const rank=st.indexOf(player)+1;
   const success=rank<=ch.objective;
+  // tout le monde rentre au parc fermé se garer (dans l'ordre d'arrivée)
+  st.forEach((k,i)=>{ k.slotSi=16+i*4; k.parked=false; });
+  parcMode=true;
   setTimeout(()=>{
     state="results";
     $("hud").classList.add("hidden");
@@ -1846,7 +1931,7 @@ function endRace(){
       }
     };
     $("results").classList.remove("hidden");
-  }, 1200);
+  }, 6500);
 }
 
 function startChapter(){
@@ -1997,10 +2082,14 @@ function loop(){
   if (track && (state==="race"||state==="countdown"||state==="results")){
     if (state==="countdown") updateCountdown(dt);
     if (state==="race") raceTime+=dt;
-    karts.forEach(k=>{ k.isPlayer? updatePlayer(k,dt) : updateAI(k,dt); });
+    karts.forEach(k=>{
+      if (parcMode) updateParc(k,dt);
+      else if (k.isPlayer) updatePlayer(k,dt);
+      else updateAI(k,dt);
+    });
     collideKarts();
     updateCamera(dt);
-    if (state==="race"){ updateHUD(dt); if (raceMode==="race") checkStoryEvents(dt); }
+    if (state==="race"){ updateHUD(dt); if (raceMode==="race" && raceOn) checkStoryEvents(dt); }
     drawMinimap();
     updateEngine(player.speed, state==="race"||state==="countdown");
     renderer.render(scene,camera);
