@@ -252,7 +252,8 @@
     <b>Q</b><b>D</b>/<b>&larr;</b><b>&rarr;</b> tourner &nbsp; <b>Espace</b> frein à main
     &nbsp;&mdash;&nbsp; sur mobile : boutons tactiles à l'écran<br>
     Volant et manette (PS5/Xbox) compatibles : branche-les avant de jouer.<br>
-    Tu es Théo Marchand, 16 ans. Le vieux kart de ton père t'attend au garage.
+    Tu es Théo Marchand, 16 ans. Le vieux kart de ton père t'attend au garage.<br>
+    <span id="ver" style="color:#54718c;font-size:11px"></span>
   </div>
 </div>
 
@@ -335,10 +336,20 @@ window.addEventListener("error", function(e){
    LA RELÈVE — jeu de karting 3D avec mode histoire
    ============================================================ */
 
-/* PWA : service worker (uniquement quand le jeu est servi en ligne) */
+/* PWA : service worker + mise à jour automatique */
+const GAME_VERSION="v12";
 if (typeof navigator!=="undefined" && "serviceWorker" in navigator &&
     typeof location!=="undefined" && location.protocol.indexOf("http")===0){
-  navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js")
+    .then(reg=>{ try{ reg.update(); }catch(e){} })
+    .catch(()=>{});
+  // quand une nouvelle version prend le contrôle, on recharge une fois automatiquement
+  let swReloaded=false;
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+    if (swReloaded) return;
+    swReloaded=true;
+    location.reload();
+  });
 }
 
 /* ---------------- PERSONNAGES ---------------- */
@@ -2000,6 +2011,7 @@ function loop(){
 
 initRenderer();
 refreshMenu();
+try{ $("ver").textContent="version "+GAME_VERSION; }catch(e){}
 loop();
 </script>
 </body>
