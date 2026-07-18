@@ -155,6 +155,22 @@
   #rotate { position:fixed; inset:0; z-index:60; background:#0d1b2a; display:none;
     align-items:center; justify-content:center; text-align:center;
     font-size:22px; font-weight:700; color:#fff; padding:30px; }
+
+  /* ---------- ECRAN D'INSTALLATION (PWA) ---------- */
+  #install { background:rgba(6,10,16,.88); backdrop-filter:blur(4px); z-index:30; }
+  #inst-card { background:#101a26; border:1px solid #33475c; border-radius:18px;
+    padding:24px 26px; width:min(420px,92vw); text-align:center;
+    box-shadow:0 18px 50px rgba(0,0,0,.6); }
+  #inst-card img { width:72px; height:72px; border-radius:16px; margin-bottom:10px;
+    box-shadow:0 6px 18px rgba(0,0,0,.5); }
+  #inst-card h3 { font-size:21px; font-weight:900; font-style:italic;
+    text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  #inst-card p { color:#9fb3c8; font-size:13.5px; line-height:1.65; margin-bottom:14px; }
+  #inst-ios { text-align:left; background:rgba(41,121,255,.10); border:1px solid #2e415a;
+    border-radius:10px; padding:10px 14px; font-size:13px; line-height:1.9;
+    margin-bottom:14px; color:#cfe0ee; }
+  #inst-ios b { background:#2c3e50; border-radius:5px; padding:1px 7px; border:1px solid #46617a; }
+  #install .btn { margin:4px; font-size:15px; padding:11px 26px; }
   @media (orientation:portrait){ body.touch #rotate { display:flex; } }
   /* écrans de résultats / menu défilables et compacts sur mobile */
   body.touch #results, body.touch #menu { justify-content:flex-start; padding:14px 10px 28px; }
@@ -205,6 +221,7 @@
   <h2>Une saison de karting &mdash; mode histoire</h2>
   <div class="menu-stripe"></div>
   <button class="btn" id="btn-start">Nouvelle saison</button>
+  <button class="btn secondary hidden" id="btn-menu-install" style="margin-top:12px">Installer l'app</button>
   <div id="controls-hint">
     <b>Z</b>/<b>&uarr;</b> accélérer &nbsp; <b>S</b>/<b>&darr;</b> freiner / reculer &nbsp;
     <b>Q</b><b>D</b>/<b>&larr;</b><b>&rarr;</b> tourner &nbsp; <b>Espace</b> frein à main
@@ -238,6 +255,21 @@
 
 <div id="fade"></div>
 <div id="rotate">Tourne ton téléphone en mode paysage pour jouer</div>
+
+<div id="install" class="overlay hidden">
+  <div id="inst-card">
+    <img src="icon-192.png" alt="" onerror="this.style.display='none'">
+    <h3>Installe La Relève</h3>
+    <p>Ajoute le jeu à ton écran d'accueil : icône dédiée, plein écran sans barre du navigateur, et jouable même hors connexion.</p>
+    <div id="inst-ios" class="hidden">
+      1. Touche le bouton <b>Partager</b> en bas de Safari<br>
+      2. Choisis <b>Sur l'écran d'accueil</b><br>
+      3. Confirme avec <b>Ajouter</b> — c'est tout !
+    </div>
+    <button class="btn" id="btn-install">Installer</button>
+    <button class="btn secondary" id="btn-install-later">Plus tard</button>
+  </div>
+</div>
 
 <script>
 window.addEventListener("error", function(e){
@@ -1398,6 +1430,47 @@ function fadeTo(cb){
   const f=$("fade");
   f.classList.add("on");
   setTimeout(()=>{ cb(); setTimeout(()=>f.classList.remove("on"),120); }, 520);
+}
+
+/* ---------------- ECRAN D'INSTALLATION (PWA) ---------------- */
+let deferredPrompt=null;
+const isStandalone=()=> (typeof matchMedia!=="undefined" && matchMedia("(display-mode: standalone)").matches) ||
+                        (typeof navigator!=="undefined" && navigator.standalone===true);
+const isIOS= typeof navigator!=="undefined" && /iPhone|iPad|iPod/i.test(navigator.userAgent||"");
+function instDismissed(){ try{ return localStorage.getItem("lr-inst")==="1"; }catch(e){ return false; } }
+function showInstall(){
+  const iosMode=isIOS && !deferredPrompt;
+  $("inst-ios").classList.toggle("hidden", !iosMode);
+  $("btn-install").classList.toggle("hidden", iosMode);
+  $("install").classList.remove("hidden");
+}
+function maybeShowInstall(){
+  if (state!=="menu" || isStandalone() || instDismissed()) return;
+  if (!TOUCH && !deferredPrompt) return;
+  showInstall();
+}
+window.addEventListener("beforeinstallprompt", e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  $("btn-menu-install").classList.remove("hidden");
+  maybeShowInstall();
+});
+$("btn-install").addEventListener("click", async ()=>{
+  if (deferredPrompt){
+    deferredPrompt.prompt();
+    try{ await deferredPrompt.userChoice; }catch(e){}
+    deferredPrompt=null;
+  }
+  $("install").classList.add("hidden");
+});
+$("btn-install-later").addEventListener("click", ()=>{
+  try{ localStorage.setItem("lr-inst","1"); }catch(e){}
+  $("install").classList.add("hidden");
+});
+$("btn-menu-install").addEventListener("click", showInstall);
+if (TOUCH && !isStandalone()){
+  $("btn-menu-install").classList.remove("hidden");
+  setTimeout(maybeShowInstall, 1500);
 }
 
 $("btn-start").addEventListener("click", ()=>{
