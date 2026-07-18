@@ -1,0 +1,25 @@
+{
+  "name": "La Relève — Une saison de karting",
+  "short_name": "La Relève",
+  "description": "Jeu de karting 3D avec mode histoire : gravis les échelons jusqu'au titre national.",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0d1b2a",
+  "theme_color": "#0d1b2a",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
