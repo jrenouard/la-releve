@@ -1023,14 +1023,16 @@ function buildTrack(def){
 
   // tribunes avec spectateurs (départ + points clés du circuit)
   function buildTribune(si){
-    const s0=samples[si%SAMPLES];
-    const base=new THREE.Vector3(s0.p.x+s0.n.x*(w+14), 0, s0.p.z+s0.n.z*(w+14));
-    let dmin=1e9;   // ne pas construire si le circuit repasse ici
-    for (let i=0;i<SAMPLES;i+=4){
+    si=si%SAMPLES;
+    const s0=samples[si];
+    const base=new THREE.Vector3(s0.p.x+s0.n.x*(w+15), 0, s0.p.z+s0.n.z*(w+15));
+    // ne pas construire si une AUTRE portion du circuit passe à proximité
+    for (let i=0;i<SAMPLES;i+=3){
+      const sep=Math.min(Math.abs(i-si), SAMPLES-Math.abs(i-si));
+      if (sep<30) continue;                       // sa propre portion ne compte pas
       const d=Math.hypot(samples[i].p.x-base.x, samples[i].p.z-base.z);
-      if (d<dmin) dmin=d;
+      if (d < w+20) return;                       // trop près -> pas de tribune ici
     }
-    if (dmin < w+7) return;
     const g=new THREE.Group();
     for (let r=0;r<4;r++){
       const step=new THREE.Mesh(new THREE.BoxGeometry(34,1.4,3),
@@ -1051,7 +1053,7 @@ function buildTrack(def){
     roof.position.set(0,7.6,4.5);
     g.add(roof);
     g.position.copy(base);
-    g.rotation.y=Math.atan2(s0.t.x,s0.t.z)+Math.PI/2;
+    g.rotation.y=Math.atan2(s0.n.x, s0.n.z);   // face à la piste
     scene.add(g);
   }
   [8, 110, 220, 330].forEach(buildTribune);
